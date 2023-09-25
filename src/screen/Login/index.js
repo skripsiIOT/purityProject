@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles.js';
-import app from '../../../database/app.js'
+import { authApp } from '../../../database/app.js';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default class Login extends Component {
     constructor(props) {
@@ -34,21 +35,24 @@ export default class Login extends Component {
     };
 
     loginProcess = () => {
-        if(this.state.username != '' && this.state.password) {
-            const dataAPI = {
-                username : this.state.username,
-                password : this.state.password,
-            }
+        const { navigation } = this.props;
+        
+        // if(this.state.username != '' && this.state.password !='' ) {
+        //     const dataAPI = {
+        //         username : this.state.username,
+        //         password : this.state.password,
+        //     }
 
-            app
-            .auth()
-            .signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then((res) => {
-                console.log(res)
-                console.log('User logged-in successfully!')
-            })
-        } else {
-            Alert.alert("Enter data to sign in!");
+        //     signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
+        //     .then((res) => {
+        //        // Alert.alert("Successfully sign in app!");
+        //         navigation.replace('Login');
+        //     })
+        // } else {
+            //     Alert.alert("Enter data to sign in!");
+            // }
+        if(this.state.username != '' && this.state.password !='' ) {
+            navigation.replace('HomeTab');
         }
     }
 
@@ -76,7 +80,7 @@ export default class Login extends Component {
                 </View>
 
                 <TouchableOpacity style = {styles.loginBtn} 
-                // onPress = {() => this.loginProcess()}
+                onPress = {() => this.loginProcess()}
                 >
                     <Text style = {styles.loginText}>Sign In</Text>
                 </TouchableOpacity>
