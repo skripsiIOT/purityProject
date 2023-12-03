@@ -3,6 +3,7 @@ import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 're
 import styles from './styles.js';
 import { authApp } from '../../../database/app.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { setUID } from '../../storage/index.js';
 
 export default class Login extends Component {
     constructor(props) {
@@ -37,23 +38,31 @@ export default class Login extends Component {
     loginProcess = () => {
         const { navigation } = this.props;
         
-        // if(this.state.username != '' && this.state.password !='' ) {
-        //     const dataAPI = {
-        //         username : this.state.username,
-        //         password : this.state.password,
-        //     }
-
-        //     signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
-        //     .then((res) => {
-        //        // Alert.alert("Successfully sign in app!");
-        //         navigation.replace('Login');
-        //     })
-        // } else {
-            //     Alert.alert("Enter data to sign in!");
-            // }
         if(this.state.username != '' && this.state.password !='' ) {
-            navigation.replace('HomeTab');
+            const dataAPI = {
+                username : this.state.username,
+                password : this.state.password,
+            }
+
+            signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
+            .then((res) => {
+                if(res != undefined) {
+                    //    Alert.alert("Successfully sign in app!");
+                    setUID(res._tokenResponse.uid)
+                    navigation.replace('Login');
+                }
+            })
+            .catch((err) => {
+                Alert.alert("The email address or password is incorrect.")
+            })
+        } 
+        else {
+            this.setState({isUsernameEmpty : true,isPasswordEmpty: true});
+            Alert.alert("Enter data to sign in!");
         }
+        // if(this.state.username != '' && this.state.password !='' ) {
+        //     navigation.replace('HomeTab');
+        // }
     }
 
     render() {
@@ -63,7 +72,7 @@ export default class Login extends Component {
                     <Text style={styles.titleText}>Login</Text>
                 </View>
 
-                <View style={styles.inputViewContainer}>
+                <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
                     <TextInput
                         style={styles.inputView}
                         placeholder='Username'
@@ -71,7 +80,7 @@ export default class Login extends Component {
                         onChangeText={text => this.checkForm(text, 'username')}/>
                 </View>
 
-                <View style={styles.inputViewContainer}>
+                <View style={this.state.isPasswordEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
                     <TextInput
                         style={styles.inputView}
                         placeholder='Password'

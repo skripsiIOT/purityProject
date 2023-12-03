@@ -26,6 +26,16 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 20,
     },
+    inputViewContainerError: {
+        width: '80%',
+        height: 55,
+        backgroundColor: '#F0F0F0',
+        justifyContent: 'center',
+        borderRadius: 10,
+        borderColor : '#FF0000',
+        borderBottomWidth : 1,
+        marginBottom: 20,
+    },
     inputView: {
         fontSize: 18,
         paddingLeft: 20,
