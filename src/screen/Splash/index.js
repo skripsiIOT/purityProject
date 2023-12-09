@@ -5,6 +5,7 @@ import { View, Image, SafeAreaView, Animated, Text, ImageBackground, StatusBar }
 
 import logoPurity from '../../../assets/image/purity_logo.jpg'
 import backgroundLogo from '../../../assets/image/splash_background.jpg'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default class Splash extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class Splash extends Component {
 
   getInitialState = () => ({
     anim              : new Animated.Value(0),
+    token             : '',
     progressStatus    : 0,
   })
 
@@ -23,6 +25,8 @@ export default class Splash extends Component {
 
   componentDidMount() {
     this.onAnimate();
+
+    this.initializeComponent();
   }
 
   componentDidUpdate(){
@@ -37,9 +41,23 @@ export default class Splash extends Component {
     this.resetState();
   }
 
+
+  initializeComponent = async() => {
+    const token  = await AsyncStorage.getItem('uid');
+
+    if(token != null) {
+      this.setState({token : token})
+    }
+  }
+
   navigateToNextPage = () => {
     const { navigation } = this.props;
-    navigation.replace('Login');
+
+    if(this.state.token != ''){
+      navigation.replace('Login');
+    } else {
+      navigation.replace('HomeTab');
+    }
   }
 
   onAnimate = () => {

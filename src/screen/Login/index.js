@@ -47,7 +47,6 @@ export default class Login extends Component {
             signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
             .then((res) => {
                 if(res != undefined) {
-                    //    Alert.alert("Successfully sign in app!");
                     setUID(res.user.uid)
                     navigation.replace('HomeTab');
                 }
@@ -60,9 +59,6 @@ export default class Login extends Component {
             this.setState({isUsernameEmpty : true,isPasswordEmpty: true});
             Alert.alert("Email and Password is Empty.");
         }
-        // if(this.state.username != '' && this.state.password !='' ) {
-        //     navigation.replace('HomeTab');
-        // }
     }
 
     render() {
