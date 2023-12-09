@@ -68,10 +68,10 @@ export default class BottomTabNavigator extends Component {
 export const Router = () => {
     return (
         <Stack.Navigator>
-            {/* <Stack.Screen 
+            <Stack.Screen 
                 name="Splash" 
                 component={Splash} 
-                options={{headerShown: false}}/> */}
+                options={{headerShown: false}}/>
             <Stack.Screen 
                 name="Login" 
                 component={Login} 

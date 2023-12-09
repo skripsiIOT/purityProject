@@ -48,17 +48,17 @@ export default class Login extends Component {
             .then((res) => {
                 if(res != undefined) {
                     //    Alert.alert("Successfully sign in app!");
-                    setUID(res._tokenResponse.uid)
-                    navigation.replace('Login');
+                    setUID(res.user.uid)
+                    navigation.replace('HomeTab');
                 }
             })
             .catch((err) => {
-                Alert.alert("The email address or password is incorrect.")
+                Alert.alert("Account not found.")
             })
         } 
         else {
             this.setState({isUsernameEmpty : true,isPasswordEmpty: true});
-            Alert.alert("Enter data to sign in!");
+            Alert.alert("Email and Password is Empty.");
         }
         // if(this.state.username != '' && this.state.password !='' ) {
         //     navigation.replace('HomeTab');
