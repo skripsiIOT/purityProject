@@ -25,7 +25,6 @@ export default class Splash extends Component {
 
   componentDidMount() {
     this.onAnimate();
-
     this.initializeComponent();
   }
 
@@ -53,10 +52,10 @@ export default class Splash extends Component {
   navigateToNextPage = () => {
     const { navigation } = this.props;
 
-    if(this.state.token != ''){
-      navigation.replace('Login');
-    } else {
+    if(this.state.token){
       navigation.replace('HomeTab');
+    } else {
+      navigation.replace('Login');
     }
   }
 
