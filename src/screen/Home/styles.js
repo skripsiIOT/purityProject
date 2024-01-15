@@ -43,8 +43,19 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#F5F5F5'
     },
+    syncBtnContainer: {
+        flex: 1,
+        alignItems: 'flex-end',
+        paddingRight: 20
+    },
     syncBtn: {
-        backgroundColor: '#fff'
+        backgroundColor: '#348EF4',
+        padding: 10,
+        borderRadius: 8,
+        alignItems: 'flex-end'
+    },
+    syncText: {
+        color: '#fff'
     },
     containerSection: {
         paddingLeft: 20,

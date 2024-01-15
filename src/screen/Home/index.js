@@ -4,9 +4,6 @@ import styles from "./styles";
 import { getDocs, collection, orderBy, limit, QuerySnapshot } from 'firebase/firestore';
 import { db } from "../../../database/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import moment from "moment";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { element } from "prop-types";
 
 export default class Home extends Component {
 
@@ -86,45 +83,141 @@ export default class Home extends Component {
         });
     }
 
+    getParamsPH = (paramsPH) => {
+        if (paramsPH >= 6.5 && paramsPH <= 8.5) {
+          return '#2FBF71'; // Safe
+        } else if (paramsPH < 6.5 && paramsPH >= 6.0 || paramsPH > 8.5 && paramsPH <= 9) {
+          return '#F4D35E'; // Warning
+        } else {
+          return '#D64933'; // Danger
+        }
+    };
+
+    getParamsTDS = (paramsTDS) => {
+        if (paramsTDS <= 500) {
+            return '#2FBF71'; // Safe
+        } else if (paramsTDS > 500 && paramsTDS <= 1000) {
+            return '#F4D35E'; // Warning
+        } else {
+            return '#D64933'; // Danger
+        }
+    }
+
+    getParamsTurbidity = (paramsTurbidity) => {
+        if (paramsTurbidity <= 1) {
+            return '#2FBF71'; // Safe
+        } else if (paramsTurbidity > 1 && paramsTurbidity <= 5) {
+            return '#F4D35E'; // Warning
+        } else {
+            return '#D64933'; // Danger
+        }
+    }
+
+    getOverallScore = (paramsPH, paramsTDS, paramsTurbidity) => {
+        let scalePH = ((paramsPH - 6.5) / (8.5 - 6.5)) * 100
+        let scaleTDS = 100 - (paramsTDS/1000) * 100
+        let scaleTurbidity = 100 - (paramsTurbidity/5) * 100
+
+        if (scalePH < 0 ) {
+            scalePH = 0
+        } else if (scalePH > 100) {
+            scalePH = 0
+        }
+
+        if (scaleTDS < 0 ) {
+            scaleTDS = 0
+        } else if (scaleTDS > 100) {
+            scaleTDS = 0
+        }
+
+        if (scaleTurbidity < 0 ) {
+            scaleTurbidity = 0
+        } else if (scaleTurbidity > 100) {
+            scaleTurbidity = 100
+        }
+
+        console.log(scalePH)
+        console.log(scaleTDS)
+        console.log(scaleTurbidity)
+
+        return ((scalePH + scaleTDS + scaleTurbidity)/3).toFixed(0)
+    }
+
+    getOverallGrade = (overallScore) => {
+
+        if (overallScore >= 0 && overallScore <= 20) {
+            return 'Poor';
+          } else if (overallScore > 20 && overallScore <= 40) {
+            return 'Subpar';
+          } else if (overallScore > 40 && overallScore <= 60) {
+            return 'Average';
+          } else if (overallScore > 60 && overallScore <= 80) {
+            return 'Good';
+          } else if (overallScore > 80 && overallScore <= 100) {
+            return 'Excellent';
+          } else {
+            return 'Invalid Score'; // Handle scores outside the expected range
+          }
+    }
+
+    getOverallColor = (overallScore) => {
+        if (overallScore >= 0 && overallScore <= 20) {
+            return '#D64933';
+          } else if (overallScore > 20 && overallScore <= 40) {
+            return '#F97316';
+          } else if (overallScore > 40 && overallScore <= 60) {
+            return '#F4D35E';
+          } else if (overallScore > 60 && overallScore <= 80) {
+            return '#2FBF71';
+          } else if (overallScore > 80 && overallScore <= 100) {
+            return '#348EF4';
+          } else {
+            return '#F7F7F7'; // Handle scores outside the expected range
+          }
+    }
+
     render() {
         const { data, isLoading } = this.state;
+
         return(
             
             <SafeAreaView style={styles.container}>
-                <View style={styles.containerScore}>
-                    <Text style={styles.scoreValue}>100</Text>
+                <View style={[styles.containerScore, {backgroundColor: (isLoading ? '#F7F7F7' : this.getOverallColor(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)))}]}>
+                    <Text style={styles.scoreValue}>{isLoading ? "0" : this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)}</Text>
                     <View style={styles.subContainerScore}>
                         <Text style={styles.scoreTitle}>Water Quality Score</Text>
-                        <Text style={styles.scoreGrade}>Excellent</Text>
+                        <Text style={styles.scoreGrade}>{isLoading ? "Calculating..." : this.getOverallGrade(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu))}</Text>
                     </View>
                 </View>
                 <View style={styles.containerSection}>
                     <View>
                     <Text style={styles.sectionTitle}>Sensor Insights</Text>
-                    <Text style={styles.sectionSubtitle}>Last sync’d: 10 minutes ago</Text>
+                    <Text style={styles.sectionSubtitle}>Last update: 10 minutes ago</Text>
                     </View>
-                    <TouchableOpacity style={styles.button} onPress = {() => this.getHistoryFirestoreCollection()}>
-                        <Text style={styles.text}>Sync Data</Text>
+                    <View style={styles.syncBtnContainer}>
+                    <TouchableOpacity style={styles.syncBtn} onPress = {() => this.getHistoryFirestoreCollection()}>
+                        <Text style={styles.syncText}>Sync Data</Text>
                     </TouchableOpacity>
+                    </View>
                 </View>
                 <ScrollView>
-                <View style={styles.containerParams}>
+                <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : '#2FBF71')}]}>
                         <Text style={styles.paramsTitle}>Water Level</Text>
                         <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].cm.toFixed(2): "N/A") + " cm"}</Text>
                     </View>
-                    <View style={styles.containerParams}>
+                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : '#2FBF71')}]}>
                         <Text style={styles.paramsTitle}>Water Temperature</Text>
                         <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].C.toFixed(1) : "N/A") + "°C"}</Text>
                     </View>
-                    <View style={styles.containerParams}>
+                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsTDS(data[0].ppm) )}]}>
                         <Text style={styles.paramsTitle}>Total Dissolved Solids</Text>
                         <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].ppm.toFixed(2) : "N/A") + " ppm"}</Text>
                     </View>
-                    <View style={styles.containerParams}>
+                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsPH(data[0].PH) )}]}>
                         <Text style={styles.paramsTitle}>pH Level</Text>
                         <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].PH.toFixed(2): "N/A")}</Text>
                     </View>
-                    <View style={styles.containerParams}>
+                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsTurbidity(data[0].ntu) )}]}>
                         <Text style={styles.paramsTitle}>Turbidity</Text>
                         <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].ntu.toFixed(2) : "N/A") + " NTU"}</Text>
                     </View>
