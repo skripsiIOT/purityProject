@@ -42,7 +42,7 @@ export default class BottomTabNavigator extends Component {
                         })}/>
                     <Tab.Screen
                         name="History"
-                        component={History}
+                        component={HistoryStack}
                         options={(route) => ({
                             headerShown: false,
                             tabBarLabel: ({focused}) => {
@@ -63,6 +63,32 @@ export default class BottomTabNavigator extends Component {
             </Tab.Navigator>
         )
     }
+}
+
+export const HistoryStack = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="History"
+                component={History}
+                options={{headerShown:false}}/>
+            {/* <Stack.Screen
+                name='Turbidity'
+                options={{headerShown:false}}/>
+            <Stack.Screen
+                name='Ph'
+                options={{headerShown:false}}/>
+            <Stack.Screen
+                name='TDS'
+                options={{headerShown:false}}/>
+            <Stack.Screen
+                name='Temperature'
+                options={{headerShown:false}}/>
+            <Stack.Screen
+                name='WaterLevel'
+                options={{headerShown:false}}/> */}
+        </Stack.Navigator>
+    )
 }
 
 export const Router = () => {
