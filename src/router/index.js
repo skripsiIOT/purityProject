@@ -4,6 +4,7 @@ import Splash from '../screen/Splash/index.js'
 import Login from '../screen/Login/index.js'
 import Home from '../screen/Home/index.js'
 import History from '../screen/History/index.js'
+import Register from '../screen/Register/index.js'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { gray, white, black, colorPrimary } from '../component/color/index.js';
@@ -71,6 +72,10 @@ export const Router = () => {
             <Stack.Screen 
                 name="Splash" 
                 component={Splash} 
+                options={{headerShown: false}}/>
+            <Stack.Screen 
+                name="Register" 
+                component={Register} 
                 options={{headerShown: false}}/>
             <Stack.Screen 
                 name="Login" 
