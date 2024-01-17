@@ -6,7 +6,7 @@ import { Calendar } from "react-native-calendars";
 import styles from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class History extends Component {
 
@@ -115,6 +115,9 @@ export default class History extends Component {
         })
 
         if(arr.length > 0){
+            this.setState({
+                selectedData: arr,
+            });
             this.calculateAverage(arr);
         } else {
             this.setState({
@@ -137,6 +140,7 @@ export default class History extends Component {
     }
 
     getSelectedDayEvents = (date) => {
+        this.setState({isLoading:true});
         let markedDates = {};
         markedDates[date] = { selected: true, color: '#64A9F7', textColor: '#FFFFFF' };
         let serviceDate = moment(date);
@@ -144,7 +148,48 @@ export default class History extends Component {
         this.setState({
             selectedDate: serviceDate,
             markedDates: markedDates
-        }, (() => this.handleRefresh()));
+        }, (() => this.getHistoryFirestoreCollection()));
+    }
+
+    navigateTurbidity = () => {
+        const context = this.state;
+        this.props.navigation.navigate('Turbidity', {
+                selectedData: context.selectedData, 
+                averageScore: context.averageScore, 
+                selectedDate: context.selectedDate
+        })
+    }
+    navigateTDS = () => {
+        const context = this.state;
+        this.props.navigation.navigate('TDS', {
+                selectedData: context.selectedData, 
+                averageScore: context.averageScore, 
+                selectedDate: context.selectedDate
+        })
+    }
+    navigateTemperature = () => {
+        const context = this.state;
+        this.props.navigation.navigate('Temperature', {
+                selectedData: context.selectedData, 
+                averageScore: context.averageScore, 
+                selectedDate: context.selectedDate
+        })
+    }
+    navigatePH = () => {
+        const context = this.state;
+        this.props.navigation.navigate('PH', {
+                selectedData: context.selectedData, 
+                averageScore: context.averageScore, 
+                selectedDate: context.selectedDate
+        })
+    }
+    navigateWaterLevel = () => {
+        const context = this.state;
+        this.props.navigation.navigate('WaterLevel', {
+                selectedData: context.selectedData, 
+                averageScore: context.averageScore, 
+                selectedDate: context.selectedDate
+        })
     }
 
     render() {
@@ -168,6 +213,13 @@ export default class History extends Component {
                         monthTextColor:'#ffffff',
                         arrowColor:'#ffffff',
                     }}
+                    renderArrow={(direction)=> direction =="left" ? <Icon name="navigate-before" style={{
+                        fontSize: 30,
+                        color: '#ffffff'
+                    }}/> : <Icon name="navigate-next" style={{
+                        fontSize: 30,
+                        color: '#ffffff'
+                    }}/>}
                 />
 
                 <View style={styles.containerSelectedDateTitle}>
@@ -189,49 +241,88 @@ export default class History extends Component {
                             this.state.averageScore != null?
                                 <>
                                     <View style={[styles.row, styles.childContainerDetail]}>
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={styles.averageContainer}>
-                                                <Text style={styles.averageTitle}>Average Score</Text>
-                                                <Text style={styles.averageValue}>{this.state.averageScore.totalValue}</Text>
-                                            </View>
-                                        </TouchableOpacity>
+                                        
+                                        <View style={styles.averageContainer}>
+                                            <Text style={styles.averageTitle}>Average Score</Text>
+                                            <Text style={styles.averageValue}>{this.state.averageScore.totalValue}</Text>
+                                        </View>
 
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={[styles.parameterContainer, styles.elevation, this.state.averageScore.water_level>1000 ? styles.valueGreen : this.state.averageScore.water_level>500 ? styles.valueYellow : styles.valueRed ]}>
-                                                <Text style={styles.parameterTitle}>Water Level</Text>
-                                                <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.water_level)} l</Text>
+                                        <TouchableOpacity onPress={() => this.navigateWaterLevel()}>
+                                            <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.water_level>1000 ? styles.valueGreen : this.state.averageScore.water_level>500 ? styles.valueYellow : styles.valueRed ]}>
+                                                <View>
+                                                    <Text style={styles.parameterTitle}>Water Level</Text>
+                                                    <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.water_level)} l</Text>
+                                                </View>
+                                                <View>
+                                                    <Icon name="navigate-next" style={{
+                                                        fontSize: 20,
+                                                        color: '#404040'
+                                                    }}/>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
 
                                     <View style={[styles.row, styles.childContainerDetail]}>
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={[styles.parameterContainer, styles.elevation, this.state.averageScore.temperature < 25 && this.state.averageScore.temperature > 20 ? styles.valueGreen : styles.valueRed ]}>
-                                                <Text style={styles.parameterTitle}>Temperature</Text>
-                                                <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.temperature)} &deg;C</Text>
+                                        <TouchableOpacity onPress={() => this.navigateTemperature()}>
+                                            <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.temperature < 25 && this.state.averageScore.temperature > 20 ? styles.valueGreen : styles.valueRed ]}>
+                                                <View>
+                                                    <Text style={styles.parameterTitle}>Temperature</Text>
+                                                    <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.temperature)} &deg;C</Text>
+                                                </View>
+                                                <View>
+                                                    <Icon name="navigate-next" style={{
+                                                            fontSize: 20,
+                                                            color: '#404040'
+                                                    }}/>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={[styles.parameterContainer, styles.elevation, this.state.averageScore.tds < 100 ? styles.valueGreen : this.state.averageScore.tds < 400 ? styles.valueYellow : styles.valueRed ]}>
-                                                <Text style={styles.parameterTitle}>TDS</Text>
-                                                <Text style={styles.parameterValue}>{this.state.averageScore.tds} ppm</Text>
+                                        <TouchableOpacity onPress={() => this.navigateTDS()}>
+                                            <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.tds < 100 ? styles.valueGreen : this.state.averageScore.tds < 400 ? styles.valueYellow : styles.valueRed ]}>
+                                                <View>
+                                                    <Text style={styles.parameterTitle}>TDS</Text>
+                                                    <Text style={styles.parameterValue}>{this.state.averageScore.tds} ppm</Text>
+                                                </View>
+                                                <View>
+                                                    <Icon name="navigate-next" style={{
+                                                            fontSize: 20,
+                                                            color: '#404040'
+                                                    }}/>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
 
                                     <View style={[styles.row, styles.childContainerDetail, styles.lastContainerParameter]}>
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={[styles.parameterContainer, styles.elevation, this.state.averageScore.ph == 7 ? styles.valueGreen : this.state.averageScore.ph < 8.5 && this.state.averageScore.ph > 6.5 ? styles.valueYellow : styles.valueRed]}>
-                                                <Text style={styles.parameterTitle}>ph Level</Text>
-                                                <Text style={styles.parameterValue}>{this.state.averageScore.ph}</Text>
+                                        <TouchableOpacity onPress={() => this.navigatePH()}>
+                                            <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.ph == 7 ? styles.valueGreen : this.state.averageScore.ph < 8.5 && this.state.averageScore.ph > 6.5 ? styles.valueYellow : styles.valueRed]}>
+                                                <View>
+                                                    <Text style={styles.parameterTitle}>ph Level</Text>
+                                                    <Text style={styles.parameterValue}>{this.state.averageScore.ph}</Text>
+                                                </View>
+                                                <View>
+                                                    <Icon name="navigate-next" style={{
+                                                            fontSize: 20,
+                                                            color: '#404040'
+                                                    }}/>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity onPress={() => {}}>
-                                            <View style={[styles.parameterContainer, styles.elevation, this.state.averageScore.turbidity < 4 ? styles.valueGreen : this.state.averageScore.turbidity < 6 ? styles.valueYellow : styles.valueRed]}>
-                                                <Text style={styles.parameterTitle}>Turbidity</Text>
-                                                <Text style={styles.parameterValue}>{this.state.averageScore.turbidity} NTU</Text>
+                                        <TouchableOpacity onPress={() => this.navigateTurbidity()}>
+                                            <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.turbidity < 4 ? styles.valueGreen : this.state.averageScore.turbidity < 6 ? styles.valueYellow : styles.valueRed]}>
+                                                <View>
+                                                    <Text style={styles.parameterTitle}>Turbidity</Text>
+                                                    <Text style={styles.parameterValue}>{this.state.averageScore.turbidity} NTU</Text>
+                                                </View>
+                                                <View>
+                                                    <Icon name="navigate-next" style={{
+                                                            fontSize: 20,
+                                                            color: '#404040'
+                                                    }}/>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
