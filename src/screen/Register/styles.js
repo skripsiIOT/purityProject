@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         paddingLeft: 20,
     },
-    loginBtn: {
+    registerBtn: {
         backgroundColor: '#348EF4',
         color: '#fff',
         height: 50,
@@ -49,16 +49,16 @@ const styles = StyleSheet.create({
         width: '80%',
         borderRadius: 10,
     },
-    loginText: {
+    registerText: {
         color: '#fff',
         fontSize: 20,
         textAlign: 'center',
         fontWeight: '700',
     },
-    registerBtn: {
+    loginBtn: {
         marginTop: 20
     },
-    registerText: {
+    loginText: {
         fontSize: 20,
         textAlign: 'center',
         fontWeight: '500',

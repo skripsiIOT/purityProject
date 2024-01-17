@@ -4,6 +4,7 @@ import Splash from '../screen/Splash/index.js'
 import Login from '../screen/Login/index.js'
 import Home from '../screen/Home/index.js'
 import History from '../screen/History/index.js'
+import Register from '../screen/Register/index.js'
 import Temperature from '../screen/History/HistoryDetail/Temperature/index.js'
 import PH from '../screen/History/HistoryDetail/PH/index.js'
 import TDS from '../screen/History/HistoryDetail/TDS/index.js'
@@ -15,6 +16,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { gray, white, black, colorPrimary } from '../component/color/index.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Confirm from '../screen/Confirm/index.js'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
@@ -217,6 +219,14 @@ export const Router = () => {
             <Stack.Screen 
                 name="Splash" 
                 component={Splash} 
+                options={{headerShown: false}}/>
+            <Stack.Screen 
+                name="Register" 
+                component={Register} 
+                options={{headerShown: false}}/>
+            <Stack.Screen 
+                name="Confirm" 
+                component={Confirm} 
                 options={{headerShown: false}}/>
             <Stack.Screen 
                 name="Login" 

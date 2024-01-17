@@ -21,15 +21,18 @@ const styles = StyleSheet.create({
     },
     scoreValue: {
         textAlign: 'center',
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: '500',
         color: '#F5F5F5',
-        // borderWidth: 5,
-        // borderRadius: 100,
-        // padding: 10,
-        // borderColor: '#F5F5F5',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderRadius: 50, // Make it half of the width/height to create a circle
+        borderWidth: 4, // Add a border width
+        borderColor: '#fff', // Set the border color
+        width: 80, // Set the width
+        height: 80, // Set the height
+        textAlign: 'center', // Center the text horizontally
+        lineHeight: 80, // Center the text vertically
     },
     scoreTitle: {
         textAlign: 'left',

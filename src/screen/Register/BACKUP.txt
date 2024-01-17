@@ -1,0 +1,58 @@
+import React, { Component, useState } from 'react'
+import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import styles from './styles.js';
+import { app } from '../app.js'
+
+export default class Login extends Component {
+
+    Register = () => {
+        const [email, setEmail] = useState('')
+        const [password, setPassword] = useState('')
+
+        registerUser = async (email, password) => {
+            await app.auth().createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                app.firestore().collection('users')
+                .doc(app.auth().currentUser.uid)
+                .set({
+                    email
+                })
+            })
+            .catch((error) => {
+                alert(error.message)
+            })
+        }
+    }
+
+    render() {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.title}>
+                    <Text style={styles.titleText}>Login</Text>
+                </View>
+
+                <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
+                    <TextInput
+                        style={styles.inputView}
+                        placeholder='Username'
+                        keyboardType='email-address'
+                        onChangeText={(email) => setEmail(email)}/>
+                </View>
+
+                <View style={this.state.isPasswordEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
+                    <TextInput
+                        style={styles.inputView}
+                        placeholder='Password'
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}/>
+                </View>
+
+                <TouchableOpacity style = {styles.loginBtn} 
+                onPress = {() => registerUser(email, password)}
+                >
+                    <Text style = {styles.loginText}>Sign In</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        )
+    }
+}

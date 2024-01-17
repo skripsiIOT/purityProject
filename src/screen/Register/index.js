@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles.js';
 import { authApp } from '../../../database/app.js';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { setUID } from '../../storage/index.js';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
-export default class Login extends Component {
+export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState();
@@ -35,30 +34,25 @@ export default class Login extends Component {
         }
     };
 
-    loginProcess = () => {
+    registerProcess = () => {
         const { navigation } = this.props;
-        
-        if(this.state.username != '' && this.state.password !='' ) {
-            const dataAPI = {
-                username : this.state.username,
-                password : this.state.password,
-            }
 
-            signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
-            .then((res) => {
-                if(res != undefined) {
-                    setUID(res.user.uid)
-                    navigation.replace('HomeTab');
+        createUserWithEmailAndPassword(authApp, this.state.username, this.state.password)
+            .then(() => {
+                console.log('User account created & signed in!');
+                navigation.replace('Confirm');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
                 }
-            })
-            .catch((err) => {
-                Alert.alert("Account not found.")
-            })
-        } 
-        else {
-            this.setState({isUsernameEmpty : true,isPasswordEmpty: true});
-            Alert.alert("Email and Password is Empty.");
-        }
+
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+            });
     }
 
     render() {
@@ -66,7 +60,7 @@ export default class Login extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>Login</Text>
+                    <Text style={styles.titleText}>Register</Text>
                 </View>
 
                 <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
@@ -85,16 +79,16 @@ export default class Login extends Component {
                         onChangeText={text => this.checkForm(text, 'password')}/>
                 </View>
 
-                <TouchableOpacity style = {styles.loginBtn} 
-                onPress = {() => this.loginProcess()}
+                <TouchableOpacity style = {styles.registerBtn} 
+                onPress = {() => this.registerProcess()}
                 >
-                    <Text style = {styles.loginText}>Sign In</Text>
+                    <Text style = {styles.registerText}>Sign Up</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.registerBtn} 
-                onPress = {() => navigation.replace('Register')}
+                <TouchableOpacity style = {styles.loginBtn} 
+                onPress = {() => navigation.replace('Login')}
                 >
-                    <Text style = {styles.registerText}>Create an Account</Text>
+                    <Text style = {styles.loginText}>Login Instead</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         )
