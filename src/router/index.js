@@ -9,11 +9,14 @@ import PH from '../screen/History/HistoryDetail/PH/index.js'
 import TDS from '../screen/History/HistoryDetail/TDS/index.js'
 import Turbidity from '../screen/History/HistoryDetail/Turbidity/index.js'
 import WaterLevel from '../screen/History/HistoryDetail/WaterLevel/index.js'
+import More from '../screen/More/index.js'
+import TipsNTrick from '../screen/More/TipsNTrick/index.js'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { gray, white, black, colorPrimary } from '../component/color/index.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,9 +69,44 @@ export default class BottomTabNavigator extends Component {
                                 }}/>
                             )
                         })}/>
+                    <Tab.Screen
+                        name="MoreStack"
+                        component={MoreStack}
+                        options={(route) => ({
+                            headerShown: false,
+                            tabBarLabel: ({focused}) => {
+                                return <Text
+                                    style={{
+                                        fontSize: (focused) ? 18 : 15,
+                                        color: (focused) ? colorPrimary : gray,
+                                    }}>  {'More'}
+                                </Text>
+                            },
+                            tabBarIcon: ({ focused,color, size }) => (
+                                <FeatherIcon name="more-horizontal" style={{
+                                    fontSize: (focused) ? 23 : 18,
+                                    color: (focused) ? colorPrimary : gray,
+                                }}/>
+                            )
+                        })}/>
             </Tab.Navigator>
         )
     }
+}
+
+export const MoreStack = () => {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen
+                name="more"
+                component={More}
+                options={{headerShown: false}}/>
+            <Stack.Screen
+                name="TipsNTrick"
+                component={TipsNTrick}
+                options={{headerShown: false}}/>
+        </Stack.Navigator>
+    )
 }
 
 export const HistoryStack = () => {
@@ -111,6 +149,12 @@ export const HistoryStack = () => {
                         fontWeight:'700',
                     },
                     headerTitleAlign:'center',
+                    // headerLeft: () => (
+                    //     <MaterialIcon name="navigate-before" style={{fontSize: 22, color: '#FFFFFF'}}/>
+                    // ),
+                    // headerBackImageSource: () => (
+                    //     <MaterialIcon name="navigate-before" style={{fontSize: 22, color: '#FFFFFF'}}/>
+                    // ),
                 }}/>
             <Stack.Screen
                 name='TDS'
