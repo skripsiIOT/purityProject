@@ -102,11 +102,38 @@ export const MoreStack = () => {
             <Stack.Screen
                 name="more"
                 component={More}
-                options={{headerShown: false}}/>
+                options={{
+                    headerShown:true, 
+                    headerTitle: 'Pengaturan', 
+                    headerTintColor:'#ffffff',
+                    headerBackVisible:'false',
+                    headerStyle:{
+                        backgroundColor:'#348EF4',
+                    },
+                    headerTitleStyle: {
+                        color:'#ffffff',
+                        fontSize:25,
+                        fontWeight:'700',
+                    },
+                    headerTitleAlign:'center',
+                }}/>
             <Stack.Screen
                 name="TipsNTrick"
                 component={TipsNTrick}
-                options={{headerShown: false}}/>
+                options={{
+                    headerShown:true, 
+                    headerTitle: 'Insight', 
+                    headerTintColor:'#ffffff',
+                    headerStyle:{
+                        backgroundColor:'#348EF4',
+                    },
+                    headerTitleStyle: {
+                        color:'#ffffff',
+                        fontSize:25,
+                        fontWeight:'700',
+                    },
+                    headerTitleAlign:'center',
+                }}/>
         </Stack.Navigator>
     )
 }

@@ -7,3 +7,12 @@ export const setUID = async(uid) => {
         console.log(err);
     }
 } 
+
+export const removeData  = async(uid) => {
+    try {
+        await AsyncStorage.removeItem(uid);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
