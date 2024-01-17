@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import styles from './styles.js'
 import { View, Image, SafeAreaView, Animated, Text, ImageBackground, StatusBar } from 'react-native'
 
-import logoPurity from '../../../assets/image/purity_logo.jpg'
+import logoPurity from '../../../assets/image/purity_logo.png'
 import backgroundLogo from '../../../assets/image/splash_background.jpg'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 

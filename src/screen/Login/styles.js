@@ -55,6 +55,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '700',
     },
+    registerBtn: {
+        marginTop: 20
+    },
+    registerText: {
+        fontSize: 20,
+        textAlign: 'center',
+        fontWeight: '500',
+        color: '#348EF4'
+    }
 });
 
 export default styles;

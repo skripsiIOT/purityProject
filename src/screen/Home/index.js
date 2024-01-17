@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, SafeAreaView, ScrollView, Pressable, onPress, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import styles from "./styles";
-import { getDocs, collection, orderBy, limit, QuerySnapshot } from 'firebase/firestore';
+import { getDocs, collection } from 'firebase/firestore';
 import { db } from "../../../database/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -24,64 +24,55 @@ export default class Home extends Component {
 
     getLocalDataStorage = async () => {
         const token = await AsyncStorage.getItem('uid');
-
+        const { navigation } = this.props;
+    
         if (token != null) {
-            this.setState({ token: 'omTmbAHDyXXl3li8HdEvgXARNJA3' });
-            this.getHistoryFirestoreCollection();
+          this.setState({ token: 'omTmbAHDyXXl3li8HdEvgXARNJA3' });
+          this.getHistoryFirestoreCollection();
         } else {
-            navigation.replace('Login');
+          navigation.replace('Login');
         }
-    }
+    };
 
     getHistoryFirestoreCollection = () => {
-        const collectionId = collection(db, this.state.token);
-        const query = getDocs(collectionId);
-        const dataCount = []
-    
-        query.then((querySnapshot) => {
-            querySnapshot.forEach((element) => {
-                const { C, PH, cm, ntu, ppm } = element.data();
-                dataCount.push({
-                    key: element.id,
-                    C,
-                    PH,
-                    cm,
-                    ntu,
-                    ppm
-                });
-                this.setState({
-                    isLoading: false,
-                    data: dataCount
-                })
-            });
+    const { token } = this.state;
+    const collectionId = collection(db, token);
+    const query = getDocs(collectionId);
+    const dataCount = [];
 
-            console.log(dataCount.length)
-
-            if (!querySnapshot.empty) {
-                const latestDocument = querySnapshot.docs[dataCount.length - 1].data();
-    
-                const { C, PH, cm, ntu, ppm } = latestDocument;
-
-                this.setState({
-                    isLoading: false,
-                    data: [{
-                        key: querySnapshot.docs[0].id,
-                        C,
-                        PH,
-                        cm,
-                        ntu,
-                        ppm
-                    }]
-                });
-
-            } else {
-                this.setState({
-                    isLoading: false,
-                    data: []
-                });
-            }
+    query.then((querySnapshot) => {
+      querySnapshot.forEach((element) => {
+        const { C, PH, cm, ntu, ppm } = element.data();
+        dataCount.push({
+          key: element.id,
+          C,
+          PH,
+          cm,
+          ntu,
+          ppm
         });
-    }
+      });
+
+      const latestDocument = querySnapshot.docs[dataCount.length - 1]?.data();
+      const { C, PH, cm, ntu, ppm } = latestDocument || {};
+
+      this.setState({
+        isLoading: false,
+        data: latestDocument
+          ? [
+              {
+                key: querySnapshot.docs[0].id,
+                C,
+                PH,
+                cm,
+                ntu,
+                ppm
+              }
+            ]
+          : []
+      });
+    });
+  };
 
     getParamsPH = (paramsPH) => {
         if (paramsPH >= 6.5 && paramsPH <= 8.5) {
@@ -182,8 +173,8 @@ export default class Home extends Component {
         return(
             
             <SafeAreaView style={styles.container}>
-                <View style={[styles.containerScore, {backgroundColor: (isLoading ? '#F7F7F7' : this.getOverallColor(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)))}]}>
-                    <Text style={styles.scoreValue}>{isLoading ? "0" : this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)}</Text>
+                <View style={[styles.containerScore, {backgroundColor: (isLoading ? '#737373' : this.getOverallColor(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)))}]}>
+                    <Text style={styles.scoreValue}>{isLoading ? "N/A" : this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)}</Text>
                     <View style={styles.subContainerScore}>
                         <Text style={styles.scoreTitle}>Water Quality Score</Text>
                         <Text style={styles.scoreGrade}>{isLoading ? "Calculating..." : this.getOverallGrade(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu))}</Text>
@@ -195,7 +186,7 @@ export default class Home extends Component {
                     <Text style={styles.sectionSubtitle}>Last update: 10 minutes ago</Text>
                     </View>
                     <View style={styles.syncBtnContainer}>
-                    <TouchableOpacity style={styles.syncBtn} onPress = {() => this.getHistoryFirestoreCollection()}>
+                    <TouchableOpacity style={[styles.syncBtn, { opacity: isLoading ? 0.5 : 1 }]} onPress = {() => this.getHistoryFirestoreCollection()} disabled={isLoading}>
                         <Text style={styles.syncText}>Sync Data</Text>
                     </TouchableOpacity>
                     </View>

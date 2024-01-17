@@ -40,7 +40,7 @@ export default class Register extends Component {
         createUserWithEmailAndPassword(authApp, this.state.username, this.state.password)
             .then(() => {
                 console.log('User account created & signed in!');
-                navigation.replace('Login');
+                navigation.replace('Confirm');
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
@@ -56,6 +56,7 @@ export default class Register extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.title}>
@@ -78,10 +79,16 @@ export default class Register extends Component {
                         onChangeText={text => this.checkForm(text, 'password')}/>
                 </View>
 
-                <TouchableOpacity style = {styles.loginBtn} 
+                <TouchableOpacity style = {styles.registerBtn} 
                 onPress = {() => this.registerProcess()}
                 >
-                    <Text style = {styles.loginText}>Sign In</Text>
+                    <Text style = {styles.registerText}>Sign Up</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style = {styles.loginBtn} 
+                onPress = {() => navigation.replace('Login')}
+                >
+                    <Text style = {styles.loginText}>Login Instead</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         )

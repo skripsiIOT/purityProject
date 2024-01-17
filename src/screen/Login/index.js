@@ -62,6 +62,7 @@ export default class Login extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.title}>
@@ -88,6 +89,12 @@ export default class Login extends Component {
                 onPress = {() => this.loginProcess()}
                 >
                     <Text style = {styles.loginText}>Sign In</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style = {styles.registerBtn} 
+                onPress = {() => navigation.replace('Register')}
+                >
+                    <Text style = {styles.registerText}>Create an Account</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         )
