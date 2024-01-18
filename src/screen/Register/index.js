@@ -34,6 +34,12 @@ export default class Register extends Component {
         }
     };
 
+    navigateConfirm = (res) => {
+        this.props.navigation.navigate('Confirm', {
+            uid: res.user.uid,
+        });
+    }
+
     registerProcess = () => {
         const { navigation } = this.props;
 
@@ -41,9 +47,12 @@ export default class Register extends Component {
             .then((res) => {
                 console.log('User account created & signed in!');
                 if(res.user.uid != "" && res.user.uid != null) {
-                    this.props.navigation.navigate('Confirm', {
-                        uid: res.user.uid,
-                    });
+                    Alert.alert("Yeay, your account has already registered.", "Click continue to get the next step!", [
+                        {
+                            text: 'Continue',
+                            onPress: () => this.navigateConfirm(res),
+                        }
+                    ])
                 }
             })
             .catch(error => {
