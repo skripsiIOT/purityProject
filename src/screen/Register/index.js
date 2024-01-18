@@ -38,17 +38,21 @@ export default class Register extends Component {
         const { navigation } = this.props;
 
         createUserWithEmailAndPassword(authApp, this.state.username, this.state.password)
-            .then(() => {
+            .then((res) => {
                 console.log('User account created & signed in!');
-                navigation.replace('Confirm');
+                if(res.user.uid != "" && res.user.uid != null) {
+                    this.props.navigation.navigate('Confirm', {
+                        uid: res.user.uid,
+                    });
+                }
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
+                    Alert.alert("That email address is already in use!")
                 }
 
                 if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
+                    Alert.alert("That email address is invalid!")
                 }
 
                 console.error(error);
