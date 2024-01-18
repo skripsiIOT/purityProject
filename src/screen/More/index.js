@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styles from "./style";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { removeData,  } from "../../storage";
+import { removeData } from "../../storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class More extends Component {
@@ -18,7 +18,9 @@ export default class More extends Component {
     logOut = async() => {
         const token = await AsyncStorage.getItem('uid');
         if(token != null) {
-            removeData(token) ? this.props.navigation.navigate('Login') : ""; 
+            removeData('uid') ? 
+            this.props.navigation.navigate('Login')
+            : ""; 
         }
     }
 
