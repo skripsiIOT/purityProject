@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     containerSelectedDateTitle:{
        paddingLeft:16,
        paddingTop:25,
+       paddingRight:16,
     },
     selectedDateTitle: {
         fontWeight:'700',
@@ -87,41 +88,6 @@ const styles = StyleSheet.create({
         borderLeftColor:'#2FBF71',
         borderLeftWidth:5,
     },
-
-
-
-
-
-    containerTitlePageText: {
-        paddingRight:25,
-        paddingLeft:25,
-        paddingTop:20,
-        paddingBottom:20,
-        backgroundColor:'#348EF4',
-    },
-    titlePageText: {
-        textAlign: 'left',
-        fontSize: 25,
-        fontWeight: '700',
-        color:'#FFF',
-    },
-    containerContentPage: {
-        padding:25
-    },
-    itemFlatList: {
-        marginTop:10,
-        marginBottom:10,
-        padding:8,
-        borderRadius:8,
-        backgroundColor:'#ffffff'
-    },
-    listTitle: {
-        marginBottom:8,
-    },
-    title: {
-        fontSize:17,
-        fontWeight:'700',
-    },
     elevation: {
         shadowOffset: {width: -2, height: 4},  
         shadowColor: '#171717',  
@@ -129,9 +95,14 @@ const styles = StyleSheet.create({
         shadowRadius: 5, 
         elevation:8,
     },
-    descriptionParameter: {
-        fontSize:15
-    },
+    buttonRefresh:{
+        paddingTop:8,
+        paddingBottom:8,
+        paddingLeft:12,
+        paddingRight:12,
+        borderRadius:10,
+        backgroundColor: '#348EF4'
+    }
 })
 
 export default styles;

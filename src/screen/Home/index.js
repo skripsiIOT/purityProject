@@ -175,7 +175,7 @@ export default class Home extends Component {
         return(
             
             <SafeAreaView style={styles.container}>
-              {console.log(data)}
+              {/* {console.log(data)} */}
                 <View style={[
                     styles.containerScore, 
                     {backgroundColor: 
