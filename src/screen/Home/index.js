@@ -27,7 +27,8 @@ export default class Home extends Component {
         const { navigation } = this.props;
     
         if (token != null) {
-          this.setState({ token: 'omTmbAHDyXXl3li8HdEvgXARNJA3' });
+          // this.setState({ token: 'omTmbAHDyXXl3li8HdEvgXARNJA3' });
+          this.setState({ token: token });
           this.getHistoryFirestoreCollection();
         } else {
           navigation.replace('Login');
@@ -53,7 +54,8 @@ export default class Home extends Component {
         });
       });
 
-      const latestDocument = querySnapshot.docs[dataCount.length - 1]?.data();
+      // const latestDocument = querySnapshot.docs[dataCount.length - 1]?.data();
+      const latestDocument = dataCount[dataCount.length - 1];
       const { C, PH, cm, ntu, ppm } = latestDocument || {};
 
       this.setState({
@@ -127,9 +129,9 @@ export default class Home extends Component {
             scaleTurbidity = 100
         }
 
-        console.log(scalePH)
-        console.log(scaleTDS)
-        console.log(scaleTurbidity)
+        // console.log(scalePH)
+        // console.log(scaleTDS)
+        // console.log(scaleTurbidity)
 
         return ((scalePH + scaleTDS + scaleTurbidity)/3).toFixed(0)
     }
@@ -173,46 +175,109 @@ export default class Home extends Component {
         return(
             
             <SafeAreaView style={styles.container}>
-                <View style={[styles.containerScore, {backgroundColor: (isLoading ? '#737373' : this.getOverallColor(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)))}]}>
-                    <Text style={styles.scoreValue}>{isLoading ? "N/A" : this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)}</Text>
+              {console.log(data)}
+                <View style={[
+                    styles.containerScore, 
+                    {backgroundColor: 
+                      (
+                        isLoading ? 
+                          '#737373' : 
+                          data.length > 0 ?
+                          this.getOverallColor(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)) : '#737373'
+                    )}]}>
+                    <Text style={styles.scoreValue}>
+                      {
+                        isLoading ? 
+                          "N/A" : 
+                          data.length > 0 ? 
+                          this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu) : "N/A"
+                      }
+                    </Text>
                     <View style={styles.subContainerScore}>
                         <Text style={styles.scoreTitle}>Water Quality Score</Text>
-                        <Text style={styles.scoreGrade}>{isLoading ? "Calculating..." : this.getOverallGrade(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu))}</Text>
+                        <Text style={styles.scoreGrade}>
+                          {
+                            isLoading ?
+                              "Calculating..." : 
+                              data.length > 0 ?
+                              this.getOverallGrade(this.getOverallScore(data[0].PH, data[0].ppm, data[0].ntu)) : "No Data"
+                          }
+                        </Text>
                     </View>
                 </View>
+
                 <View style={styles.containerSection}>
                     <View>
                     <Text style={styles.sectionTitle}>Sensor Insights</Text>
                     <Text style={styles.sectionSubtitle}>Last update: 10 minutes ago</Text>
                     </View>
                     <View style={styles.syncBtnContainer}>
-                    <TouchableOpacity style={[styles.syncBtn, { opacity: isLoading ? 0.5 : 1 }]} onPress = {() => this.getHistoryFirestoreCollection()} disabled={isLoading}>
+                    <TouchableOpacity 
+                      style={[styles.syncBtn, { opacity: isLoading ? 0.5 : 1 }]} 
+                      onPress = {() => this.getHistoryFirestoreCollection()} disabled={isLoading}>
                         <Text style={styles.syncText}>Sync Data</Text>
                     </TouchableOpacity>
                     </View>
                 </View>
+
                 <ScrollView>
-                <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : '#2FBF71')}]}>
-                        <Text style={styles.paramsTitle}>Water Level</Text>
-                        <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].cm.toFixed(2): "N/A") + " cm"}</Text>
-                    </View>
-                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : '#2FBF71')}]}>
-                        <Text style={styles.paramsTitle}>Water Temperature</Text>
-                        <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].C.toFixed(1) : "N/A") + "°C"}</Text>
-                    </View>
-                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsTDS(data[0].ppm) )}]}>
-                        <Text style={styles.paramsTitle}>Total Dissolved Solids</Text>
-                        <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].ppm.toFixed(2) : "N/A") + " ppm"}</Text>
-                    </View>
-                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsPH(data[0].PH) )}]}>
-                        <Text style={styles.paramsTitle}>pH Level</Text>
-                        <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].PH.toFixed(2): "N/A")}</Text>
-                    </View>
-                    <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : this.getParamsTurbidity(data[0].ntu) )}]}>
-                        <Text style={styles.paramsTitle}>Turbidity</Text>
-                        <Text style={styles.paramsValue}>{isLoading ? "Loading..." : (data.length > 0 ? data[0].ntu.toFixed(2) : "N/A") + " NTU"}</Text>
-                    </View>
+
+                  <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : data ? '#2FBF71' : '#737373')}]}>
+                      <Text style={styles.paramsTitle}>Water Level</Text>
+                      <Text style={styles.paramsValue}>
+                        {
+                          isLoading ? 
+                            "Loading..." : 
+                            (data.length > 0 ? data[0].cm.toFixed(2) + "cm": "No Data")
+                        }
+                      </Text>
+                  </View>
+
+                  <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : data ? '#2FBF71' : '#737373')}]}>
+                      <Text style={styles.paramsTitle}>Water Temperature</Text>
+                      <Text style={styles.paramsValue}>
+                        {
+                          isLoading ? "Loading..." : 
+                          (data.length > 0 ? data[0].C.toFixed(1) + "°C": "No data")
+                        }
+                      </Text>
+                  </View>
+
+                  <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : data.length > 0 ? this.getParamsTDS(data[0].ppm) : "#737373" )}]}>
+                      <Text style={styles.paramsTitle}>Total Dissolved Solids</Text>
+                      <Text style={styles.paramsValue}>
+                        {
+                          isLoading ? 
+                            "Loading..." : 
+                            (data.length > 0 ? data[0].ppm.toFixed(2) + " ppm" : "No Data")
+                        }
+                      </Text>
+                  </View>
+
+                  <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : data.length > 0 ? this.getParamsPH(data[0].PH) : '#737373' )}]}>
+                      <Text style={styles.paramsTitle}>pH Level</Text>
+                      <Text style={styles.paramsValue}>
+                        {
+                          isLoading ? 
+                            "Loading..." : 
+                            (data.length > 0 ? data[0].PH.toFixed(2): "No Data")
+                        }
+                      </Text>
+                  </View>
+
+                  <View style={[styles.containerParams, {borderLeftColor: (isLoading ? '#737373' : data.length > 0 ? this.getParamsTurbidity(data[0].ntu) : '#737373' )}]}>
+                      <Text style={styles.paramsTitle}>Turbidity</Text>
+                      <Text style={styles.paramsValue}>
+                        {
+                          isLoading ? 
+                            "Loading..." : 
+                            (data.length > 0 ? data[0].ntu.toFixed(2) + " NTU" : "No Data")
+                        }
+                      </Text>
+                  </View>
+
                 </ScrollView>
+
             </SafeAreaView>
         )
     }

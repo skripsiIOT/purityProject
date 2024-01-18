@@ -57,7 +57,7 @@ export default class Login extends Component {
         } 
         else {
             this.setState({isUsernameEmpty : true,isPasswordEmpty: true});
-            Alert.alert("Email and Password is Empty.");
+            Alert.alert("Email and/or Password is Empty.");
         }
     }
 
