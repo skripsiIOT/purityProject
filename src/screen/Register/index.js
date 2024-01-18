@@ -64,6 +64,18 @@ export default class Register extends Component {
                     Alert.alert("That email address is invalid!")
                 }
 
+                if (error.code === 'auth/missing-password') {
+                    Alert.alert("Please fill the password!")
+                }
+
+                if (error.code === 'auth/missing-email') {
+                    Alert.alert("Please fill the username!")
+                }
+
+                if (error.code === 'auth/weak-password') {
+                    Alert.alert("Password should be at least 6 characters!")
+                }
+
                 console.error(error);
             });
     }
