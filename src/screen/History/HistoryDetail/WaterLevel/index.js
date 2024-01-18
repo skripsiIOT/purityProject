@@ -38,6 +38,18 @@ export default class WaterLevel extends Component {
         return Math.floor(digit * 100) / 100;
     }
 
+    convertDate = (time) => {
+        let getArrayDate = time.split("T");
+        return getArrayDate[0];
+    }
+
+    convertTime = (time) => {
+        let getArrayDate = time.split("T");
+        let getArrayTime = getArrayDate[1].split("Z");
+        let getElementTime= getArrayTime[0].split(":");
+        return `${getElementTime[0]}:${getElementTime[1]}`;
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -51,7 +63,7 @@ export default class WaterLevel extends Component {
                             <View style={[styles.row, styles.containerDetail]}>
                                 <View>
                                     <Text style={styles.textTitleDetail}>Date</Text>
-                                    <Text style={styles.textDescDetail}>{moment(this.state.selectedDate).format("DD MMMM YYYY")}</Text>
+                                    <Text style={styles.textDescDetail}>{moment(this.convertDate(this.state.selectedDate)).format("DD MMMM YYYY")}</Text>
                                 </View>
                                 <View>
                                     <Text style={[styles.textTitleDetail, styles.textAlignRight]}>Average Score</Text>
@@ -79,7 +91,7 @@ export default class WaterLevel extends Component {
                                     <View style={[styles.row, styles.flatListItem, index%2 == 0 ? styles.backgroundEven : styles.backgroundOdd]}>
                                         <View style={styles.withList}>
                                             <Text style={[styles.textAlignLeft, styles.textListItem]}>
-                                                {moment(item.key).format("HH:mm")}
+                                                {this.convertTime(item.key)}
                                             </Text>
                                         </View>
                                         <View style={styles.withList}>

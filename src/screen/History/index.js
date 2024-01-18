@@ -109,7 +109,7 @@ export default class History extends Component {
         const arr = [];
 
         context.data.map((item) => {
-            if(moment(item.key).format('YYYY-MM-DD') == context.selectedDate){
+            if(moment(this.convertDate(item.key)).format('YYYY-MM-DD') == context.selectedDate){
                 arr.push(item);
             }
         })
@@ -139,6 +139,11 @@ export default class History extends Component {
         this.filterDataHistory();
     }
 
+    handleRefreshButton = () => {
+        this.setState({isLoading: true});
+        this.getHistoryFirestoreCollection();
+    }
+
     getSelectedDayEvents = (date) => {
         this.setState({isLoading:true});
         let markedDates = {};
@@ -148,7 +153,10 @@ export default class History extends Component {
         this.setState({
             selectedDate: serviceDate,
             markedDates: markedDates
-        }, (() => this.getHistoryFirestoreCollection()));
+        }, (() => 
+            // this.getHistoryFirestoreCollection()
+            this.handleRefresh()
+        ));
     }
 
     navigateTurbidity = () => {
@@ -192,6 +200,17 @@ export default class History extends Component {
         })
     }
 
+    convertDate = (time) => {
+        let getArrayDate = time.split("T");
+        return getArrayDate[0];
+    }
+
+    convertTime = (time) => {
+        let getArrayDate = time.split("T");
+        let getArrayTime = getArrayDate[1].split("Z");
+        return getArrayTime[0];
+    }
+
     render() {
         return(
             <SafeAreaView style={styles.container}>
@@ -222,14 +241,20 @@ export default class History extends Component {
                     }}/>}
                 />
 
-                <View style={styles.containerSelectedDateTitle}>
-                    <Text style={styles.selectedDateTitle}>
-                        {
-                            this.state.selectedDate != '' && this.state.selectedDate !=null ?
-                            moment(this.state.selectedDate).format('DD MMMM YYYY') : "Loading..."
-                        }
-                    </Text>
-                    <Text style={styles.averageScoreInsight}>Average Sensor Insight</Text>
+                <View style={[styles.containerSelectedDateTitle, styles.row]}>
+                    <View>
+                        <Text style={styles.selectedDateTitle}>
+                            {
+                                this.state.selectedDate != '' && this.state.selectedDate !=null ?
+                                moment(this.convertDate(this.state.selectedDate)).format('DD MMMM YYYY') : "Loading..."
+                            }
+                        </Text>
+                        <Text style={styles.averageScoreInsight}>Average Sensor Insight</Text>
+                    </View>
+
+                    <TouchableOpacity onPress={() => this.handleRefreshButton()} style={styles.buttonRefresh}>
+                        <Icon name="refresh" style={{color:'#FFFFFF', fontSize: 25}}/>
+                    </TouchableOpacity>
                 </View>
 
                 <ScrollView>

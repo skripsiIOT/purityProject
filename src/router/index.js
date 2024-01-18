@@ -29,7 +29,7 @@ export default class BottomTabNavigator extends Component {
             <Tab.Navigator
                 screenOptions={{
                     activeTintColor: white,
-                    inactiveTintColor: gray,
+                    inactiveTintColor: '#737373',
                 }}>
                     <Tab.Screen
                         name='Home'
@@ -40,14 +40,14 @@ export default class BottomTabNavigator extends Component {
                                 return <Text
                                     style={{
                                         fontSize: (focused) ? 18 : 15,
-                                        color: (focused) ? colorPrimary : gray,
+                                        color: (focused) ? colorPrimary : '#737373',
                                     }}>  {'Home'}
                                 </Text>
                             },
                             tabBarIcon: ({ focused, color, size }) => (
                                 <Icon name="home" style={{
                                     fontSize: (focused) ? 23 : 18,
-                                    color: (focused) ? colorPrimary : gray,
+                                    color: (focused) ? colorPrimary : '#737373',
                                 }}/>
                             )
                         })}/>
@@ -60,14 +60,14 @@ export default class BottomTabNavigator extends Component {
                                 return <Text
                                     style={{
                                         fontSize: (focused) ? 18 : 15,
-                                        color: (focused) ? colorPrimary : gray,
+                                        color: (focused) ? colorPrimary : '#737373',
                                     }}>  {'History'}
                                 </Text>
                             },
                             tabBarIcon: ({ focused,color, size }) => (
-                                <Icon name="history" style={{
+                                <MaterialIcon name="calendar-month" style={{
                                     fontSize: (focused) ? 23 : 18,
-                                    color: (focused) ? colorPrimary : gray,
+                                    color: (focused) ? colorPrimary : '#737373',
                                 }}/>
                             )
                         })}/>
@@ -80,14 +80,14 @@ export default class BottomTabNavigator extends Component {
                                 return <Text
                                     style={{
                                         fontSize: (focused) ? 18 : 15,
-                                        color: (focused) ? colorPrimary : gray,
+                                        color: (focused) ? colorPrimary : '#737373',
                                     }}>  {'More'}
                                 </Text>
                             },
                             tabBarIcon: ({ focused,color, size }) => (
                                 <FeatherIcon name="more-horizontal" style={{
                                     fontSize: (focused) ? 23 : 18,
-                                    color: (focused) ? colorPrimary : gray,
+                                    color: (focused) ? colorPrimary : '#737373',
                                 }}/>
                             )
                         })}/>
@@ -104,7 +104,7 @@ export const MoreStack = () => {
                 component={More}
                 options={{
                     headerShown:true, 
-                    headerTitle: 'Pengaturan', 
+                    headerTitle: 'More', 
                     headerTintColor:'#ffffff',
                     headerBackVisible:'false',
                     headerStyle:{
@@ -178,12 +178,6 @@ export const HistoryStack = () => {
                         fontWeight:'700',
                     },
                     headerTitleAlign:'center',
-                    // headerLeft: () => (
-                    //     <MaterialIcon name="navigate-before" style={{fontSize: 22, color: '#FFFFFF'}}/>
-                    // ),
-                    // headerBackImageSource: () => (
-                    //     <MaterialIcon name="navigate-before" style={{fontSize: 22, color: '#FFFFFF'}}/>
-                    // ),
                 }}/>
             <Stack.Screen
                 name='TDS'
