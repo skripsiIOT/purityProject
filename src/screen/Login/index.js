@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert, StatusBar } from 'react-native';
 import styles from './styles.js';
-import { authApp } from '../../../database/app.js';
+import { authApp, db } from '../../../database/app.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { setUID } from '../../storage/index.js';
+import { setDeviceID, setUID } from '../../storage/index.js';
+import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
 
 export default class Login extends Component {
     constructor(props) {
@@ -36,8 +37,6 @@ export default class Login extends Component {
     };
 
     loginProcess = () => {
-        const { navigation } = this.props;
-        
         if(this.state.username != '' && this.state.password !='' ) {
             const dataAPI = {
                 username : this.state.username,
@@ -47,11 +46,13 @@ export default class Login extends Component {
             signInWithEmailAndPassword(authApp, dataAPI.username, dataAPI.password)
             .then((res) => {
                 if(res != undefined) {
-                    setUID(res.user.uid)
-                    navigation.replace('HomeTab');
+                    this.getDeviceIDUser(res.user.uid);
+                    // setUID(res.user.uid)
+                    // navigation.replace('HomeTab');
                 }
             })
             .catch((err) => {
+                console.log(err)
                 Alert.alert("Account not found.")
             })
         } 
@@ -61,10 +62,31 @@ export default class Login extends Component {
         }
     }
 
+    getDeviceIDUser = (uid) => {
+        const collectionID = doc(db, 'device', uid);
+        const documentID = getDoc(collectionID);
+
+        documentID.then((res)=>{
+            const data = res.data();
+            setDeviceID(data.deviceID);
+        }).then(() => {
+            this.navigationHomeTab(uid);
+        })
+    }
+
+    navigationHomeTab = (uid) => {
+        const { navigation } = this.props;
+        setUID(uid)
+        navigation.replace('HomeTab');
+    }
+
     render() {
         const { navigation } = this.props;
         return (
             <SafeAreaView style={styles.container}>
+
+                <StatusBar translucent backgroundColor='#FFFFFF' barStyle={'dark-content'}/>
+
                 <View style={styles.title}>
                     <Text style={styles.titleText}>Login</Text>
                 </View>

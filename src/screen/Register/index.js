@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, View, TextInput, Text, TouchableOpacity, Alert, StatusBar } from 'react-native';
 import styles from './styles.js';
 import { authApp } from '../../../database/app.js';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -17,28 +17,52 @@ export default class Register extends Component {
         isPasswordEmpty: false,
     });
 
-    checkForm = (text , type) => {
-        //set state username and password
-        if(type == 'username'){
-            this.setState({username:text});
-        }else if (type == 'password'){
-            this.setState({password:text});
-        }
+    // checkForm = (text , type) => {
+    //     //set state username and password
+    //     if(type == 'username'){
+    //         this.setState({username:text});
+    //     }else if (type == 'password'){
+    //         this.setState({password:text});
+    //     }
 
-        //set logic for border color form
-        this.setState({ isUsernameEmpty : false , isPasswordEmpty : false });
-        if (text == '' && type == 'username'){
-            this.setState({ isUsernameEmpty : true });
-        } else if (text == '' && type == 'password'){
-            this.setState({ isPasswordEmpty : true });
+    //     //set logic for border color form
+    //     this.setState({ isUsernameEmpty : false , isPasswordEmpty : false });
+    //     if (text == '' && text==null && text==' ' && type == 'username'){
+    //         this.setState({ isUsernameEmpty : true });
+    //     } else if (text == '' && text==null && text==' ' && type == 'password'){
+    //         this.setState({ isPasswordEmpty : true });
+    //     }
+    // };
+
+    checkFormUsername = (username) => {
+        const regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+        if(username== '' || username==null || username==' '){
+            this.setState({isUsernameEmpty: true});
+        } else {
+            // console.log(username.match(regex));
+            username.match(regex) == null ? this.setState({isUsernameEmpty: true}) : this.setState({isUsernameEmpty: false, username:username});
         }
-    };
+    }
+
+    checkFormPassword = (password) => {
+        if(password== '' || password==null || password==' '){
+            this.setState({isPasswordEmpty: true});
+        } else {
+            password.length < 6 ? this.setState({isPasswordEmpty:true}) : this.setState({isPasswordEmpty:false, password:password});
+        }
+    }
 
     navigateConfirm = (res) => {
         this.props.navigation.navigate('Confirm', {
             uid: res.user.uid,
         });
     }
+    // navigateConfirm2 = (res) => {
+    //     this.props.navigation.navigate('Confirm', {
+    //         uid: "1234",
+    //     });
+    // }
 
     registerProcess = () => {
         const { navigation } = this.props;
@@ -84,35 +108,43 @@ export default class Register extends Component {
         const { navigation } = this.props;
         return (
             <SafeAreaView style={styles.container}>
+
+                <StatusBar translucent backgroundColor='#FFFFFF' barStyle={'dark-content'}/>
+
                 <View style={styles.title}>
                     <Text style={styles.titleText}>Register</Text>
                 </View>
 
-                <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
+                <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
                     <TextInput
                         style={styles.inputView}
                         placeholder='Username'
                         keyboardType='email-address'
-                        onChangeText={text => this.checkForm(text, 'username')}/>
+                        onChangeText={text => 
+                            this.checkFormUsername(text)
+                        }/>
                 </View>
+                <Text style={this.state.isUsernameEmpty ? styles.notValidInput : styles.validInput}>Not valid email address. ex:purityproject@gmail.com</Text>
 
-                <View style={this.state.isPasswordEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
+                <View style={this.state.isPasswordEmpty ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
                     <TextInput
                         style={styles.inputView}
                         placeholder='Password'
                         secureTextEntry={true}
-                        onChangeText={text => this.checkForm(text, 'password')}/>
+                        onChangeText={text => 
+                            this.checkFormPassword(text)
+                        }/>
                 </View>
+                <Text style={this.state.isPasswordEmpty ? styles.notValidInput : styles.validInput}>Password must have more than 6 characters.</Text>
 
-                <TouchableOpacity style = {styles.registerBtn} 
-                onPress = {() => this.registerProcess()}
-                >
+                <TouchableOpacity style = {styles.registerBtn} onPress = {() => 
+                    this.registerProcess()
+                    // this.navigateConfirm2()
+                }>
                     <Text style = {styles.registerText}>Sign Up</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.loginBtn} 
-                onPress = {() => navigation.replace('Login')}
-                >
+                <TouchableOpacity style = {styles.loginBtn} onPress = {() => navigation.replace('Login')}>
                     <Text style = {styles.loginText}>Login Instead</Text>
                 </TouchableOpacity>
             </SafeAreaView>

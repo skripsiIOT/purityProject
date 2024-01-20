@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StatusBar } from "react-native";
 import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from "../../../database/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,8 +36,9 @@ export default class Home extends Component {
         }
     };
 
-    getHistoryFirestoreCollection = () => {
-    const { token } = this.state;
+    getHistoryFirestoreCollection = async() => {
+    // const { token } = this.state;
+    const token = await AsyncStorage.getItem('deviceID');
     const collectionId = collection(db, token);
     const query = getDocs(collectionId);
     const dataCount = [];
@@ -176,6 +178,7 @@ export default class Home extends Component {
             
             <SafeAreaView style={styles.container}>
               {/* {console.log(data)} */}
+                <StatusBar translucent backgroundColor='#FFFFFF' barStyle={'dark-content'}/>
                 <View style={[
                     styles.containerScore, 
                     {backgroundColor: 

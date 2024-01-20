@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, FlatList,TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
+import { View, Text, FlatList,TouchableOpacity, ScrollView, StatusBar } from "react-native";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from "../../../database/app";
 import { Calendar } from "react-native-calendars";
 import styles from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -40,9 +41,10 @@ export default class History extends Component {
         }
     }
 
-    getHistoryFirestoreCollection = () => {
+    getHistoryFirestoreCollection = async() => {
         const history = [];
-        const collectionId = collection(db, this.state.token);
+        const token = await AsyncStorage.getItem('deviceID');
+        const collectionId = collection(db, token);
         const query = getDocs(collectionId);
         query.then((querySnapshot) => {
             querySnapshot.forEach((element) => {
@@ -133,10 +135,11 @@ export default class History extends Component {
         if(this.state.selectedDate == '' || this.state.selectedDate == null) {
             this.setState({
                 selectedDate: moment().format("YYYY-MM-DD")
-            })
+            }, (() => this.filterDataHistory()))
+        } else {
+            this.filterDataHistory();
         }
         
-        this.filterDataHistory();
     }
 
     handleRefreshButton = () => {
@@ -154,7 +157,6 @@ export default class History extends Component {
             selectedDate: serviceDate,
             markedDates: markedDates
         }, (() => 
-            // this.getHistoryFirestoreCollection()
             this.handleRefresh()
         ));
     }
@@ -214,6 +216,7 @@ export default class History extends Component {
     render() {
         return(
             <SafeAreaView style={styles.container}>
+                <StatusBar translucent backgroundColor='#348EF4' barStyle={'dark-content'}/>
                 <Calendar
                     style={styles.calendar}
                     onDayPress={(day) => {
