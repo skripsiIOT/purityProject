@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./style";
-import { SafeAreaView, Text, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
 
 export default class TipsNTrick extends Component {
@@ -11,6 +12,7 @@ export default class TipsNTrick extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <StatusBar translucent backgroundColor='#348EF4' barStyle={'dark-content'}/>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.containerItem}>
                         <Text style={styles.textTitle}>Total Dissolved Solid (TDS)</Text>

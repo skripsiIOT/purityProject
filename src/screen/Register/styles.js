@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     title: {
         top: 0,
         marginTop: 200,
-        marginBottom: 60,
+        marginBottom: 57,
     },
     titleText: {
         fontSize: 35,
@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0F0F0',
         justifyContent: 'center',
         borderRadius: 10,
-        marginBottom: 20,
     },
     inputViewContainerError: {
         width: '80%',
@@ -34,7 +33,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor : '#FF0000',
         borderBottomWidth : 1,
-        marginBottom: 20,
     },
     inputView: {
         fontSize: 18,
@@ -63,6 +61,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '500',
         color: '#348EF4'
+    },
+    validInput : {
+        display:'none',
+        fontSize:12,
+        color:'#D64933',
+        marginTop:5,
+        marginBottom:20,
+    },
+    notValidInput:{
+        fontSize:12,
+        color:'#D64933',
+        marginTop:5,
+        marginBottom:20,
+    },
+    marginBottomInputValid : {
+        marginBottom:20,
     }
 });
 

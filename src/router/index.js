@@ -242,16 +242,16 @@ export const Router = () => {
                 component={Splash} 
                 options={{headerShown: false}}/>
             <Stack.Screen 
+                name="Login" 
+                component={Login} 
+                options={{headerShown: false}}/>
+            <Stack.Screen 
                 name="Register" 
                 component={Register} 
                 options={{headerShown: false}}/>
             <Stack.Screen 
                 name="Confirm" 
                 component={Confirm} 
-                options={{headerShown: false}}/>
-            <Stack.Screen 
-                name="Login" 
-                component={Login} 
                 options={{headerShown: false}}/>
             <Stack.Screen
                 name='HomeTab'

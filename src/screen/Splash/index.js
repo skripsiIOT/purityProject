@@ -55,7 +55,7 @@ export default class Splash extends Component {
     if(this.state.token){
       navigation.replace('HomeTab');
     } else {
-      navigation.replace('Register');
+      navigation.replace('Login');
     }
   }
 
