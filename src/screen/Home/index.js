@@ -143,7 +143,7 @@ export default class Home extends Component {
         if (overallScore >= 0 && overallScore <= 20) {
             return 'Poor';
           } else if (overallScore > 20 && overallScore <= 40) {
-            return 'Subpar';
+            return 'Low-grade';
           } else if (overallScore > 40 && overallScore <= 60) {
             return 'Average';
           } else if (overallScore > 60 && overallScore <= 80) {
@@ -197,7 +197,7 @@ export default class Home extends Component {
                       }
                     </Text>
                     <View style={styles.subContainerScore}>
-                        <Text style={styles.scoreTitle}>Water Quality Score</Text>
+                        <Text style={styles.scoreTitle}>Average Water Quality Score</Text>
                         <Text style={styles.scoreGrade}>
                           {
                             isLoading ?
