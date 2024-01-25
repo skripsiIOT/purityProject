@@ -13,6 +13,7 @@ export default class Register extends Component {
     getInitialState = () => ({
         username: "",
         isUsernameEmpty: false,
+        isNotmatchUsername : false,
         password: "",
         isPasswordEmpty: false,
     });
@@ -37,19 +38,24 @@ export default class Register extends Component {
     checkFormUsername = (username) => {
         const regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
+        console.log("1",this.state.isUsernameEmpty)
+        console.log("2",this.state.isNotmatchUsername)
+        console.log("3",this.state.username)
         if(username== '' || username==null || username==' '){
-            this.setState({isUsernameEmpty: true});
+            this.setState({isUsernameEmpty: true, isNotmatchUsername: false, username: ""});
         } else {
             // console.log(username.match(regex));
-            username.match(regex) == null ? this.setState({isUsernameEmpty: true}) : this.setState({isUsernameEmpty: false, username:username});
+            username.match(regex) == null ? this.setState({isUsernameEmpty: false, isNotmatchUsername:true, username: username}) : this.setState({isUsernameEmpty: false, isNotmatchUsername:false, username:username});
         }
     }
 
     checkFormPassword = (password) => {
+        this.setState({isPasswordEmpty:true, password: ""});
+
         if(password== '' || password==null || password==' '){
-            this.setState({isPasswordEmpty: true});
+            this.setState({isPasswordEmpty: true, password: ""});
         } else {
-            password.length < 6 ? this.setState({isPasswordEmpty:true}) : this.setState({isPasswordEmpty:false, password:password});
+            password.length < 6 ? this.setState({isPasswordEmpty:true, password:password}) : this.setState({isPasswordEmpty:false, password:password});
         }
     }
 
@@ -80,24 +86,20 @@ export default class Register extends Component {
                 }
             })
             .catch(error => {
-                if (error.code === 'auth/email-already-in-use') {
-                    Alert.alert("That email address is already in use!")
-                }
-
-                if (error.code === 'auth/invalid-email') {
-                    Alert.alert("That email address is invalid!")
-                }
-
-                if (error.code === 'auth/missing-password') {
-                    Alert.alert("Please fill the password!")
-                }
-
                 if (error.code === 'auth/missing-email') {
                     Alert.alert("Please fill the username!")
                 }
-
+                if (error.code === 'auth/missing-password') {
+                    Alert.alert("Please fill the password!")
+                }
+                if (error.code === 'auth/invalid-email') {
+                    Alert.alert("That email address is invalid!")
+                }
                 if (error.code === 'auth/weak-password') {
                     Alert.alert("Password should be at least 6 characters!")
+                }
+                if (error.code === 'auth/email-already-in-use') {
+                    Alert.alert("That email address is already in use!")
                 }
 
                 console.error(error);
@@ -115,7 +117,7 @@ export default class Register extends Component {
                     <Text style={styles.titleText}>Register</Text>
                 </View>
 
-                <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
+                <View style={this.state.isUsernameEmpty || this.state.isNotmatchUsername ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
                     <TextInput
                         style={styles.inputView}
                         placeholder='email@example.com'
@@ -124,7 +126,8 @@ export default class Register extends Component {
                             this.checkFormUsername(text)
                         }/>
                 </View>
-                <Text style={this.state.isUsernameEmpty ? styles.notValidInput : styles.validInput}>Not valid email address. ex:purityproject@gmail.com</Text>
+                <Text style={this.state.isUsernameEmpty && !this.state.isNotmatchUsername ? styles.notValidInput : styles.validInput}>Username cannot be empty.</Text>
+                <Text style={!this.state.isUsernameEmpty && this.state.isNotmatchUsername ? styles.notValidInput : styles.validInput}>Not valid email address. ex:purityproject@gmail.com</Text>
 
                 <View style={this.state.isPasswordEmpty ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
                     <TextInput
