@@ -118,7 +118,7 @@ export default class Register extends Component {
                 <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : [styles.inputViewContainer, styles.marginBottomInputValid]}>
                     <TextInput
                         style={styles.inputView}
-                        placeholder='Username'
+                        placeholder='email@example.com'
                         keyboardType='email-address'
                         onChangeText={text => 
                             this.checkFormUsername(text)

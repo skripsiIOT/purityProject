@@ -94,7 +94,7 @@ export default class Login extends Component {
                 <View style={this.state.isUsernameEmpty ? styles.inputViewContainerError : styles.inputViewContainer}>
                     <TextInput
                         style={styles.inputView}
-                        placeholder='Username'
+                        placeholder='email@example.com'
                         keyboardType='email-address'
                         onChangeText={text => this.checkForm(text, 'username')}/>
                 </View>
