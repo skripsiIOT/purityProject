@@ -66,8 +66,6 @@ const styles = StyleSheet.create({
         display:'none',
         fontSize:12,
         color:'#D64933',
-        marginTop:5,
-        marginBottom:20,
     },
     notValidInput:{
         fontSize:12,
