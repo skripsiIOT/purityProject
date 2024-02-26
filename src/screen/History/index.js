@@ -279,7 +279,7 @@ export default class History extends Component {
                                             <View style={[styles.row, styles.parameterContainer, styles.elevation, this.state.averageScore.water_level>1000 ? styles.valueGreen : this.state.averageScore.water_level>500 ? styles.valueYellow : styles.valueRed ]}>
                                                 <View>
                                                     <Text style={styles.parameterTitle}>Water Level</Text>
-                                                    <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.water_level)} l</Text>
+                                                    <Text style={styles.parameterValue}>{parseInt(this.state.averageScore.water_level)} cm</Text>
                                                 </View>
                                                 <View>
                                                     <Icon name="navigate-next" style={{

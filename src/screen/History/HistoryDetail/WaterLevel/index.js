@@ -67,7 +67,7 @@ export default class WaterLevel extends Component {
                                 </View>
                                 <View>
                                     <Text style={[styles.textTitleDetail, styles.textAlignRight]}>Average Score</Text>
-                                    <Text style={[styles.textDescDetail, styles.textAlignRight]}>{this.state.averageScore.water_level} l</Text>
+                                    <Text style={[styles.textDescDetail, styles.textAlignRight]}>{this.state.averageScore.water_level} cm</Text>
                                 </View>
                             </View>
 
