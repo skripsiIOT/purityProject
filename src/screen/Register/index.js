@@ -38,13 +38,9 @@ export default class Register extends Component {
     checkFormUsername = (username) => {
         const regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
-        console.log("1",this.state.isUsernameEmpty)
-        console.log("2",this.state.isNotmatchUsername)
-        console.log("3",this.state.username)
         if(username== '' || username==null || username==' '){
             this.setState({isUsernameEmpty: true, isNotmatchUsername: false, username: ""});
         } else {
-            // console.log(username.match(regex));
             username.match(regex) == null ? this.setState({isUsernameEmpty: false, isNotmatchUsername:true, username: username}) : this.setState({isUsernameEmpty: false, isNotmatchUsername:false, username:username});
         }
     }
