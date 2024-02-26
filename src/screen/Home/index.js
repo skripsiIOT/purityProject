@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from "../../../database/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 
 export default class Home extends Component {
 
@@ -212,7 +213,9 @@ export default class Home extends Component {
                 <View style={styles.containerSection}>
                     <View>
                     <Text style={styles.sectionTitle}>Sensor Insights</Text>
-                    <Text style={styles.sectionSubtitle}>Last update: 10 minutes ago</Text>
+                    <Text style={styles.sectionSubtitle}>{"Last update: "}
+                     { isLoading == false && data.length > 0 ? moment(data[0].key).format("DD MMM YYYY") : "" }
+                     </Text>
                     </View>
                     <View style={styles.syncBtnContainer}>
                     <TouchableOpacity 
