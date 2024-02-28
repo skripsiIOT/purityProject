@@ -22,7 +22,7 @@ export default class More extends Component {
         const deviceID = await AsyncStorage.getItem('deviceID');
         if(token != null && deviceID !=null) {
             removeDataUID('uid') ? 
-                removeDataUID(deviceID) ? this.props.navigation.navigate('Login') : ""
+                removeDataUID('deviceID') ? this.props.navigation.navigate('Login') : ""
             : "" ;
         }
     }
